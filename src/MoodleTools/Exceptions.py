@@ -8,13 +8,13 @@ class ServerNotFoundError(Exception):
         self.server = server
     def __str__(self):
         return self.server
-    
+
 class AreaNotFoundError(Exception):
     def __init__(self, area):
         self.area = area
     def __str__(self):
         return self.area
-    
+
 class InvalidDataKeyError(Exception):
     def __init__(self, key):
         self.key = key

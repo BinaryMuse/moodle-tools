@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <servers>
+        <server selector="prod" name="Production Moodle Server">
+            <areas>
+                <area selector="live">
+                    <src>/Volumes/moodle3-e/moodle</src>
+                    <data>/Volumes/moodle3-f/moodledata</data>
+                </area>
+                <area selector="stage">
+                    <src>/Volumes/moodle3-e/fpu-moodle</src>
+                    <data>/Volumes/moodle3-f/moodledata</data>
+                </area>
+            </areas>
+        </server>
+        <server selector="test" name="Test Moodle Server">
+            <areas>
+                <area selector="live">
+                    <src>/Volumes/moodle2-e/moodle</src>
+                    <data>/Volumes/moodle2-e/moodleuploads</data>
+                </area>
+                <area selector="stage">
+                    <src>/Volumes/moodle2-e/fpu-moodle</src>
+                    <data>/Volumes/moodle2-e/moodleuploads</data>
+                </area>
+            </areas>
+        </server>
+    </servers>
+</config>
