@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+# Copyright (c) 2010, Fresno Pacific University
+# Licensed under the New BSD license; see the LICENSE file for details.
+
 from optparse import OptionParser
 from xml.dom import minidom
 from MoodleTools.Exceptions import *

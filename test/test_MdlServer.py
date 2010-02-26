@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+# Copyright (c) 2010, Fresno Pacific University
+# Licensed under the New BSD license; see the LICENSE file for details.
+
 import unittest
 from MoodleTools.MdlServer import MdlServer
 import os

@@ -79,3 +79,10 @@ should resemble the following:
 
 To run the unit tests, be sure to have the `nose` module installed, change
 directories into the root of the source distribution, and run `nosetests`.
+
+Licensing
+---------
+
+Copyright (c) 2010, Fresno Pacific University
+
+Licensed under the New BSD license; see the LICENSE file for details.
