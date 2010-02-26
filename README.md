@@ -65,7 +65,7 @@ should resemble the following:
 
     .gitignore
     clean.sh
-    README
+    README.md
     src/
       source files
     test/
