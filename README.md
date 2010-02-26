@@ -14,8 +14,8 @@ Getting Help
 Every program included in moodle-tools shows helpful output with the `-h` or
 `--help` option.
 
-It Can Do:
-----------
+It Can Do
+---------
 
 *   `mdl-server` - Shows server configuration data as defined in an XML-based
     configuration file (by default located at `mdl-server.xml`--you can
@@ -23,8 +23,8 @@ It Can Do:
     file allows you to define an installation directory and a data directory
     for one or more installations of Moodle on one or more servers.
 
-It Might Will Can Do:
----------------------
+It Might Will Can Do
+--------------------
 
 *   `mdl-archive` - Archive a working git branch or a source distribution
     to a file
@@ -43,9 +43,10 @@ moodle-tools is still in very early planning and development. I decided to
 put it on GitHub to get things organized and give anyone who might be crazy
 enough to be interested a chance to take a look at it.
 
-Most of these tools stem from needs that I have managing the multiple Moodle
-installations I have to manage. If you have ideas or suggestions, please feel
-free to let me know, or fork the project and make the changes yourself.
+Most of these tools stem from specific needs that I have managing the
+multiple Moodle installations I have to administer, so some of the tools may
+feel very specific, and the package may feel pretty narrow. I'd like to
+expand this into a generic toolset that works for a good number of other people.
 
 If you'd like to contribute code, feel free to fork the project, make changes,
 and initiate a pull request. It'd be nice if changes came with documentation
@@ -65,7 +66,7 @@ should resemble the following:
 
     .gitignore
     clean.sh
-    README.md
+    README
     src/
       source files
     test/
