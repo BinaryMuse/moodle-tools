@@ -14,16 +14,47 @@ Getting Help
 Every program included in moodle-tools shows helpful output with the `-h` or
 `--help` option.
 
-Included Programs
------------------
+It Can Do:
+----------
 
-*   `mdl-server`
-
-    `mdl-server` shows server configuration data as defined in an XML-based
+*   `mdl-server` - Shows server configuration data as defined in an XML-based
     configuration file (by default located at `mdl-server.xml`--you can
     choose a different file by passing the `--file=FILE` option). This XML
     file allows you to define an installation directory and a data directory
     for one or more installations of Moodle on one or more servers.
+
+It Might Will Can Do:
+---------------------
+
+*   `mdl-archive` - Archive a working git branch or a source distribution
+    to a file
+*   `mdl-deploy` - Deploy a working git branch, source distribution, or
+    archive file to a working Moodle installation. Can use data from
+    `mdl-server` to determine installation locations
+*   `mdl-maintenance` - Turn maintenance mode on or off for a Moodle
+    installation.
+*   `mdl-backup` - Back up certain parts of a Moodle installation, including
+    source code, data directory, and database schema and data.
+
+Contributing
+------------
+
+moodle-tools is still in very early planning and development. I decided to
+put it on GitHub to get things organized and give anyone who might be crazy
+enough to be interested a chance to take a look at it.
+
+Most of these tools stem from needs that I have managing the multiple Moodle
+installations I have to manage. If you have ideas or suggestions, please feel
+free to let me know, or fork the project and make the changes yourself.
+
+If you'd like to contribute code, feel free to fork the project, make changes,
+and initiate a pull request. It'd be nice if changes came with documentation
+and unit tests, but it's not required (yet). I'm not 100% sure how I want
+the documentation to work yet (HTML? man pages?), so I haven't checked anything
+in quite yet. However, every program should present helpful information
+via `mdl-program --help` or `mdl-program -h`.
+
+Clone the project with `git clone git://github.com/BinaryMuse/moodle-tools.git`
 
 Running Unit Tests
 ------------------
