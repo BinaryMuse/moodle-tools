@@ -22,6 +22,9 @@ It Can Do
     choose a different file by passing the `--file=FILE` option). This XML
     file allows you to define an installation directory and a data directory
     for one or more installations of Moodle on one or more servers.
+    
+    Other programs that need to access information about your Moodle
+    installations will use the output from `mdl-server` to do so.
 
 It Might Will Can Do
 --------------------
@@ -35,6 +38,8 @@ It Might Will Can Do
     installation.
 *   `mdl-backup` - Back up certain parts of a Moodle installation, including
     source code, data directory, and database schema and data.
+*   `mdl-roll-course` - Back up a current course and restore it into a new
+    course. (Might be easier to use RPC mechanisms?)
 
 Contributing
 ------------
