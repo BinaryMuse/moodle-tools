@@ -1,0 +1,3 @@
+include src/*.xml
+include src/mdl-*
+include test/*.xml
