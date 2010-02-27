@@ -34,7 +34,6 @@ class MdlServer:
         '''
         # If -f or --file was used, and the file exists, use it.
         filename = self.chooseFileToParse()
-        print filename
         self.xml = minidom.parse(os.path.expanduser(filename))
 
         self.servernodes = self.getServerNodes()               # List of server dicts # Dict of server dicts, keyed by selector
