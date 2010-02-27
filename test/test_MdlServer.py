@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import os
 import unittest
 from optparse import Values
 from MoodleTools.MdlServer import MdlServer
