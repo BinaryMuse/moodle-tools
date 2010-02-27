@@ -32,11 +32,9 @@ class MdlServer:
         Each dictionary contains attributes called 'node'. The data referenced
         contains the actual minidom objects we can iterate over.
         '''
-        # If we can't find the file specified, check on the MDL_SERVER_CONFIG
-        # environment variable.
-        filename = self.options.file
-        if(not os.path.isfile(filename)):
-            filename = os.environ['MDL_SERVER_CONFIG']
+        # If -f or --file was used, and the file exists, use it.
+        filename = self.chooseFileToParse()
+        print filename
         self.xml = minidom.parse(os.path.expanduser(filename))
 
         self.servernodes = self.getServerNodes()               # List of server dicts # Dict of server dicts, keyed by selector
@@ -45,6 +43,37 @@ class MdlServer:
                                                                # e.g. areanodes['prod']['live']['selector']
         self.datanodes   = self.getDataNodes(self.areanodes)   # Multidimensional dict defining data for sever-area combos
                                                                # e.g. datanodes['prod']['stage']['src']
+
+    def chooseFileToParse(self):
+        '''
+        Pick a file to parse based on the following rules:
+        If -f or --file was passed and the file exists, use that.
+        If -f or --file was not used, and MDL_SERVER_CONFIG is set and exists use that.
+        If neither -f/--file or MDL_SERVER_CONFIG is valid, look for mdl-server.xml in the cwd.
+        '''
+        # See if -f/--file is valid.
+        filename = os.path.expanduser(self.options.file)
+        if(os.path.isfile(filename)):
+            return filename
+
+        # If -f/--file was passed, and the file doesn't exist, don't fall
+        # through--return an error.
+        if(not self.options.file == ''):
+            return ''
+
+        # The file passed wasn't valid; check the environment.
+        filename = os.getenv('MDL_SERVER_CONFIG', '')
+        filename = os.path.expanduser(filename)
+        if(os.path.isfile(filename)):
+            return filename
+
+        # The environment wasn't valid or not set. Check the cwd.
+        filename = os.getcwd() + '/mdl-server.xml'
+        if(os.path.isfile(filename)):
+            return filename
+
+        # Nothing; return a blank string and let error handling take care of it.
+        return ''
 
     def executeByArgs(self):
         '''
