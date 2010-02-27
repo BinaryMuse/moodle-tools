@@ -1,6 +1,8 @@
 moodle-tools
 ============
 
+![moodle-tools](http://binarymuse.github.com/moodle-tools/moodle_tools.png)
+
 What is moodle-tools
 --------------------
 
