@@ -90,12 +90,14 @@ out from git or downloaded as a source archive), your directory structure
 should resemble the following:
 
     .gitignore
+    README.md
     clean.sh
-    README
+    rununittests.sh
     src/
       source files
     test/
       unit tests
 
 To run the unit tests, be sure to have the `nose` module installed, change
-directories into the root of the source distribution, and run `nosetests`.
+directories into the root of the source distribution, and run
+`./rununittests`. This runs `nosetests` with the appropriate coverage options.
