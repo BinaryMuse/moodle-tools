@@ -16,14 +16,14 @@ class test_MdlServer(unittest.TestCase):
         options.file = 'test/test_mdl-server.xml'
         args = []
         self.mdlsrv = MdlServer(options, args)
-        
+
     def testFileNotFound(self):
         '''
         Test that an incorrect or missing XML file generates an exception.
         '''
         self.mdlsrv.options.file = "notfound.xml"
         self.assertRaises(IOError, self.mdlsrv.parse)
-    
+
     def testCorrectServers(self):
         '''
         Test that the class returns the correct servers from the XML file.
@@ -33,7 +33,7 @@ class test_MdlServer(unittest.TestCase):
         self.assertEqual(len(servers), 2)
         self.assertTrue('prod' in servers)
         self.assertTrue('test' in servers)
-        
+
     def testCorrectServerNames(self):
         '''
         Test that the class associates the right server names with the selectors.
@@ -42,7 +42,7 @@ class test_MdlServer(unittest.TestCase):
         nodes = self.mdlsrv.servernodes
         self.assertEqual(nodes['prod']['name'], 'Production Moodle Server')
         self.assertEqual(nodes['test']['name'], 'Test Moodle Server')
-        
+
     def testCorrectAreas(self):
         '''
         Test that the class returns the correct areas for a given server.
@@ -52,7 +52,7 @@ class test_MdlServer(unittest.TestCase):
         self.assertEqual(len(areas), 2)
         self.assertTrue('live' in areas)
         self.assertTrue('stage' in areas)
-    
+
     def testCorrectData(self):
         '''
         Test that the correct path data can be retrieved from the class.

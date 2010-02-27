@@ -32,7 +32,7 @@ class MdlServer:
         contains the actual minidom objects we can iterate over.
         '''
         self.xml = minidom.parse(self.options.file)
-        
+
         self.servernodes = self.getServerNodes()               # List of server dicts # Dict of server dicts, keyed by selector
                                                                # e.g. servernodes['prod']['name']
         self.areanodes   = self.getAreaNodes(self.servernodes) # Dict of area lists

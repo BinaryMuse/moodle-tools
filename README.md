@@ -1,6 +1,8 @@
 moodle-tools
 ============
 
+![moodle-tools](http://binarymuse.github.com/moodle-tools/moodle_tools.png)
+
 What is moodle-tools
 --------------------
 
@@ -22,7 +24,7 @@ It Can Do
     choose a different file by passing the `--file=FILE` option). This XML
     file allows you to define an installation directory and a data directory
     for one or more installations of Moodle on one or more servers.
-    
+
     Other programs that need to access information about your Moodle
     installations will use the output from `mdl-server` to do so.
 
@@ -49,7 +51,7 @@ installation. I currently work with version 2.6.1.
 
 moodle-tools currently depends on the following:
 
-*   minidom
+*   xml.minidom
 *   optparse
 *   unittest
 
@@ -74,6 +76,12 @@ via `mdl-program --help` or `mdl-program -h`.
 
 Clone the project with `git clone git://github.com/BinaryMuse/moodle-tools.git`
 
+Notes
+-----
+
+Notes (thoughts, discussion, etc.) for moodle-tools is held at the
+[GitHub wiki for moodle-tools](http://wiki.github.com/BinaryMuse/moodle-tools/).
+
 Running Unit Tests
 ------------------
 
@@ -82,15 +90,17 @@ out from git or downloaded as a source archive), your directory structure
 should resemble the following:
 
     .gitignore
+    README.md
     clean.sh
-    README
+    rununittests.sh
     src/
       source files
     test/
       unit tests
 
 To run the unit tests, be sure to have the `nose` module installed, change
-directories into the root of the source distribution, and run `nosetests`.
+directories into the root of the source distribution, and run
+`./rununittests`. This runs `nosetests` with the appropriate coverage options.
 
 Licensing
 ---------
