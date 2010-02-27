@@ -1,7 +1,4 @@
-<!--
-  Copyright (c) 2010, Fresno Pacific University
-  Licensed under the New BSD license; see the LICENSE file for details.
---><servers>
+<servers>
     <server selector="selector" name="Friendly Name"> <!-- one or more -->
         <areas>
             <area selector="selector" name="Friendly Name"> <!-- one or more -->
