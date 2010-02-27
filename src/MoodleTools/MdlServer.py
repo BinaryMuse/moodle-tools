@@ -3,6 +3,7 @@
 # Copyright (c) 2010, Fresno Pacific University
 # Licensed under the New BSD license; see the LICENSE file for details.
 
+import os
 from xml.dom import minidom
 from MoodleTools.Exceptions import *
 
@@ -31,7 +32,12 @@ class MdlServer:
         Each dictionary contains attributes called 'node'. The data referenced
         contains the actual minidom objects we can iterate over.
         '''
-        self.xml = minidom.parse(self.options.file)
+        # If we can't find the file specified, check on the MDL_SERVER_CONFIG
+        # environment variable.
+        filename = self.options.file
+        if(not os.path.isfile(filename)):
+            filename = os.environ['MDL_SERVER_CONFIG']
+        self.xml = minidom.parse(os.path.expanduser(filename))
 
         self.servernodes = self.getServerNodes()               # List of server dicts # Dict of server dicts, keyed by selector
                                                                # e.g. servernodes['prod']['name']

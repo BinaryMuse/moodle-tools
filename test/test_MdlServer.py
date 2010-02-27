@@ -3,6 +3,7 @@
 # Copyright (c) 2010, Fresno Pacific University
 # Licensed under the New BSD license; see the LICENSE file for details.
 
+import os
 import unittest
 from optparse import Values
 from MoodleTools.MdlServer import MdlServer
@@ -19,10 +20,29 @@ class test_MdlServer(unittest.TestCase):
 
     def testFileNotFound(self):
         '''
-        Test that an incorrect or missing XML file generates an exception.
+        Test that an incorrect or missing XML file generates an exception
+        if the environment variable is not set.
         '''
+        oldenviron = os.environ['MDL_SERVER_CONFIG']
+        os.environ["MDL_SERVER_CONFIG"] = ''
         self.mdlsrv.options.file = "notfound.xml"
         self.assertRaises(IOError, self.mdlsrv.parse)
+        os.environ["MDL_SERVER_CONFIG"] = oldenviron
+
+    def testFileNotFoundUseEnviron(self):
+        '''
+        Test that an incorrect or missing XML file will cause
+        the program to use an environment variable instead.
+        '''
+        oldenviron = os.environ['MDL_SERVER_CONFIG']
+        os.environ["MDL_SERVER_CONFIG"] = os.getcwd() + '/test/test_mdl-server.xml'
+        self.mdlsrv.options.file = "notfound.xml"
+        self.mdlsrv.parse()
+        servers = self.mdlsrv.servernodes.keys()
+        self.assertEqual(len(servers), 2)
+        self.assertTrue('prod' in servers)
+        self.assertTrue('test' in servers)
+        os.environ["MDL_SERVER_CONFIG"] = oldenviron
 
     def testCorrectServers(self):
         '''
