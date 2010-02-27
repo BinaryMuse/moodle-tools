@@ -14,8 +14,5 @@ setup(name='moodle-tools',
       packages = ['MoodleTools'],
       package_dir = {'MoodleTools': 'src/MoodleTools'},
       scripts = ['src/mdl-server'],
-      data_files = [
-        ('config', ['src/mdl-server.sample.xml', 'src/mdl-server-schema.xml'])
-      ],
       license = 'New BSD License'
       )
