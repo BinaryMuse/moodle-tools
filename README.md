@@ -41,6 +41,18 @@ It Might Will Can Do
 *   `mdl-roll-course` - Back up a current course and restore it into a new
     course. (Might be easier to use RPC mechanisms?)
 
+Dependencies
+------------
+
+moodle-tools is written in Python, so you will obviously need a working
+installation. I currently work with version 2.6.1.
+
+moodle-tools currently depends on the following:
+
+*   minidom
+*   optparse
+*   unittest
+
 Contributing
 ------------
 

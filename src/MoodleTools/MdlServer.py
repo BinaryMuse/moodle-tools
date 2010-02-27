@@ -3,7 +3,6 @@
 # Copyright (c) 2010, Fresno Pacific University
 # Licensed under the New BSD license; see the LICENSE file for details.
 
-from optparse import OptionParser
 from xml.dom import minidom
 from MoodleTools.Exceptions import *
 
@@ -11,27 +10,27 @@ from MoodleTools.Exceptions import *
 # Define the application class
 # ==============================================================================
 class MdlServer:
-    def __init__(self):
-        """Initialize data and wait for the calling program to issue instructions."""
+    def __init__(self, options, args):
+        '''
+        Initialize data and wait for the calling program to issue instructions.
+        options and args passed from calling program, generated from OptionParser
+        '''
+        self.options, self.args = options, args
         self.data = {}
 
     def go(self):
-        """Start 'er up."""
-        self.parseOptions()
+        '''
+        Start 'er up.
+        '''
         self.parse()
         self.executeByArgs()
 
-    def parseOptions(self):
-        """Parse options passed to the script via the command line."""
-        parser = OptionParser(usage="%prog [options] [<server> [<area> [<data>]]]",
-            description="Outputs configuration data. Specify a server, a server and an area, or a server, " +
-            "area, and data element (src or data) to print appropriate data.", version="Moodle Tools mdl-server 0.1")
-        parser.add_option("-f", "--file", metavar="FILE", help="use FILE instead of mdl-server.xml", default="mdl_server.xml")
-
-        (self.options, self.args) = parser.parse_args()
-
     def parse(self):
-        """Parse the data in the XML file."""
+        '''
+        Parse the data in the XML file.
+        Each dictionary contains attributes called 'node'. The data referenced
+        contains the actual minidom objects we can iterate over.
+        '''
         self.xml = minidom.parse(self.options.file)
         
         self.servernodes = self.getServerNodes()               # List of server dicts # Dict of server dicts, keyed by selector
@@ -42,6 +41,9 @@ class MdlServer:
                                                                # e.g. datanodes['prod']['stage']['src']
 
     def executeByArgs(self):
+        '''
+        Output the requested data by counting command line arguments.
+        '''
         args = self.args
         if len(args) == 0:
             print self.listServers()
@@ -55,12 +57,18 @@ class MdlServer:
             raise TooManyArgsError
 
     def listServers(self):
+        '''
+        Output a list of the servers.
+        '''
         retval = ''
         for svr_selector, svr_data in self.servernodes.iteritems():
             retval += "{0} ({1})\n".format(svr_data['name'], svr_selector)
         return retval.rstrip()
 
     def listAreas(self, server):
+        '''
+        Output a list of the areas for a server.
+        '''
         if not self.areanodes.has_key(server):
             raise ServerNotFoundError(server)
 
@@ -70,6 +78,9 @@ class MdlServer:
         return retval.rstrip()
 
     def listData(self, server, area, data):
+        '''
+        Output a specific piece of data for a server/area combo.
+        '''
         if not self.datanodes.has_key(server):
             raise ServerNotFoundError(server)
         if not self.datanodes[server].has_key(area):
@@ -80,7 +91,9 @@ class MdlServer:
         return self.datanodes[server][area][data]
 
     def getServerNodes(self):
-        """Return a list of dicts defining each dictionary"""
+        '''
+        Searches the XML for the servers and returns a dictionary.
+        '''
         servernodes = {}
         for svrnode in self.xml.getElementsByTagName('server'):
             name = svrnode.getAttribute('name')
@@ -89,10 +102,12 @@ class MdlServer:
         return servernodes
 
     def getAreaNodes(self, servernodes):
-        """Return a dict of (server-selector: area-list) pairs,
-        where area-list is a list of dicts"""
+        '''
+        Searches through the XML for the areas and returns a dictionary.
+        '''
         areanodes = {}
         for svrselector, svrentry in servernodes.iteritems():
+            # The 'node' attribute has the actual minidom objects
             node = svrentry['node']
             areas = {}
             for areanode in node.getElementsByTagName('area'):
@@ -102,18 +117,16 @@ class MdlServer:
         return areanodes
 
     def getDataNodes(self, areanodes):
-        """Return a dict in the following format:
-          svr_dict  area_dict        data_dict
-        { server: { area selector: { src: src-path, data: data-path},
-                    area selector: { src: src-path, data: data-path}
-                  },
-          server: ... }"""
+        '''
+        Searches the XML for the data for an area and returns a dictionary.
+        '''
         svr_data = {}
         # Iterate over the areanodes dict
         for svr_selector, area_dict in areanodes.iteritems():
             area_data = {}
             for area_selector, area_data_dict in area_dict.iteritems():
                 data_data = {}
+                # The 'node' attribute has the actual minidom objects
                 src_nodes = area_data_dict['node'].getElementsByTagName('src')
                 src = src_nodes[0].firstChild.data
                 data_nodes = area_data_dict['node'].getElementsByTagName('data')
