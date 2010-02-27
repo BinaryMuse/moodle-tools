@@ -8,10 +8,14 @@ find ./src -name *.pyc | xargs rm
 find ./test -name *.pyc | xargs rm
 
 # Remove the .coverage file
-rm .coverage 2>/dev/null
+sudo rm .coverage 2>/dev/null
 
 # Remove the generated MANIFEST file
-rm MANIFEST 2>/dev/null
+sudo rm MANIFEST 2>/dev/null
+
+# Remove the build directory, if there is one
+# (After running python setup.py install from root)
+sudo rm -Rf build 2>/dev/null
 
 echo ">> cleaning up moodle-tools"
 echo "   moodle-tools is squeaky clean"
@@ -21,6 +25,7 @@ echo
 if [ "$1" = "uninstall" ]; then
     echo ">> uninstalling moodle-tools..."
     sudo rm /usr/local/bin/mdl-server 2>/dev/null
+    echo "   the moodle-tools scripts have been removed"
     sudo rm -Rf $MTOOLS_DIR 2>/dev/null
     echo "   the moodle-tools python library has been removed"
     echo
@@ -28,8 +33,8 @@ fi
 
 # Check to see if we have any of the moodle-tools scripts in our local bin
 echo ">> checking for moodle scripts ..."
-if [ ls /usr/local/bin/mdl* 2>/dev/null ]; then
-    :
+if [ `ls /usr/local/bin/mdl* 2>/dev/null` ]; then
+    echo "   FOUND moodle-tools scripts"
 else
     echo "   no moodle-tools scripts found"
 fi
