@@ -12,13 +12,13 @@ class test_Exceptions(unittest.TestCase):
             raise ServerNotFoundError('myTestServer')
         except ServerNotFoundError as exc:
             self.assertEqual(str(exc), 'myTestServer')
-    
+
     def testAreaNotFoundError(self):
         try:
             raise AreaNotFoundError('myTestArea')
         except AreaNotFoundError as exc:
             self.assertEqual(str(exc), 'myTestArea')
-            
+
     def testInvalidDataKeyError(self):
         try:
             raise InvalidDataKeyError('myTestDataKey')

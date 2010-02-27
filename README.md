@@ -24,7 +24,7 @@ It Can Do
     choose a different file by passing the `--file=FILE` option). This XML
     file allows you to define an installation directory and a data directory
     for one or more installations of Moodle on one or more servers.
-    
+
     Other programs that need to access information about your Moodle
     installations will use the output from `mdl-server` to do so.
 
