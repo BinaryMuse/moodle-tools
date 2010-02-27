@@ -17,7 +17,7 @@ err = sys.stderr
 parser = OptionParser(usage="%prog [options] [<server> [<area> [<data>]]]",
     description="Outputs configuration data. Specify a server, a server and an area, or a server, " +
     "area, and data element (src or data) to print appropriate data.", version="Moodle Tools mdl-server 0.1")
-parser.add_option("-f", "--file", metavar="FILE", help="use FILE instead of mdl-server.xml", default="mdl_server.xml")
+parser.add_option("-f", "--file", metavar="FILE", help="use FILE instead of mdl-server.xml", default="mdl-server.xml")
 
 (options, args) = parser.parse_args()
 
