@@ -20,13 +20,26 @@ It Can Do
 ---------
 
 *   `mdl-server` - Shows server configuration data as defined in an XML-based
-    configuration file (by default located at `mdl-server.xml`--you can
-    choose a different file by passing the `--file=FILE` option). This XML
-    file allows you to define an installation directory and a data directory
-    for one or more installations of Moodle on one or more servers.
+    configuration file. This XML file allows you to define an installation
+    directory and a data directory for one or more installations of Moodle on
+    one or more servers.
 
     Other programs that need to access information about your Moodle
     installations will use the output from `mdl-server` to do so.
+
+    `mdl-server` tries to locate a valid XML file in the following order:
+
+    1.  Look for the file passed by command line (`mdl-server -f FILE` or
+    `mdl-server --file=FILE`)
+    2.  Look for the file defined by the environment variable named
+    `MDL_SERVER_CONFIG`
+    3.  Look for a file named `mdl-server.xml` in the current working directory.
+
+    Note that if the environment variable is valid, you MUST pass `-f` or
+    `--file` to override this value.
+
+    See the file `src/mdl-server-schema.xml` for the details of how to
+    construct this XML file, and `src/mdl-server.sample.xml` for a sample file.
 
 It Might Will Can Do
 --------------------
