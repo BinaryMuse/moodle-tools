@@ -51,7 +51,7 @@ installation. I currently work with version 2.6.1.
 
 moodle-tools currently depends on the following:
 
-*   minidom
+*   xml.minidom
 *   optparse
 *   unittest
 
@@ -75,6 +75,12 @@ in quite yet. However, every program should present helpful information
 via `mdl-program --help` or `mdl-program -h`.
 
 Clone the project with `git clone git://github.com/BinaryMuse/moodle-tools.git`
+
+Notes
+-----
+
+Notes (thoughts, discussion, etc.) for moodle-tools is held at the
+[GitHub wiki for moodle-tools](http://wiki.github.com/BinaryMuse/moodle-tools/).
 
 Running Unit Tests
 ------------------
