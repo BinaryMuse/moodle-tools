@@ -18,31 +18,56 @@ class test_MdlServer(unittest.TestCase):
         args = []
         self.mdlsrv = MdlServer(options, args)
 
-    def testFileNotFound(self):
+    def testFileNotFoundNoEnv(self):
         '''
-        Test that an incorrect or missing XML file generates an exception
-        if the environment variable is not set.
+        Test that an incorrect XML file generates exception if the env is not set.
         '''
-        oldenviron = os.environ['MDL_SERVER_CONFIG']
-        os.environ["MDL_SERVER_CONFIG"] = ''
+        oldenviron = None
+        try:
+            oldenviron = os.environ['MDL_SERVER_CONFIG']
+        except KeyError:
+            pass
+        else:
+            del(os.environ['MDL_SERVER_CONFIG'])
         self.mdlsrv.options.file = "notfound.xml"
         self.assertRaises(IOError, self.mdlsrv.parse)
-        os.environ["MDL_SERVER_CONFIG"] = oldenviron
+        if(not oldenviron == None):
+            os.environ['MDL_SERVER_CONFIG'] = oldenviron
+
+    def textFileNotFoundWithEnv(self):
+        '''
+        Test that an incorrect XML file generates exception even if env is set.
+        '''
+        oldenviron = None
+        try:
+            oldenviron = os.environ['MDL_SERVER_CONFIG']
+        except KeyError:
+            pass
+        os.environ['MDL_SERVER_CONFIG'] = os.getcwd() + '/test/test_mdl-server.xml'
+        self.mdlsrv.options.file = "notfound.xml"
+        self.assertRaises(IOError, self.mdlsrv.parse)
+        if(not oldenviron == None):
+            os.environ['MDL_SERVER_CONFIG'] = oldenviron
 
     def testFileNotFoundUseEnviron(self):
         '''
-        Test that an incorrect or missing XML file will cause
-        the program to use an environment variable instead.
+        Test that not specifying a file with good env set will use env.
         '''
-        oldenviron = os.environ['MDL_SERVER_CONFIG']
-        os.environ["MDL_SERVER_CONFIG"] = os.getcwd() + '/test/test_mdl-server.xml'
-        self.mdlsrv.options.file = "notfound.xml"
+        oldenviron = None
+        try:
+            oldenviron = os.environ['MDL_SERVER_CONFIG']
+        except KeyError:
+            pass
+        os.environ['MDL_SERVER_CONFIG'] = os.getcwd() + '/test/test_mdl-server.xml'
+        print os.environ['MDL_SERVER_CONFIG']
+        self.mdlsrv.options.file = ''
         self.mdlsrv.parse()
         servers = self.mdlsrv.servernodes.keys()
         self.assertEqual(len(servers), 2)
         self.assertTrue('prod' in servers)
         self.assertTrue('test' in servers)
-        os.environ["MDL_SERVER_CONFIG"] = oldenviron
+        if(not oldenviron == None):
+            os.environ['MDL_SERVER_CONFIG'] = oldenviron
 
     def testCorrectServers(self):
         '''
