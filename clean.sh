@@ -1,7 +1,14 @@
 # Copyright (c) 2010, Fresno Pacific University
 # Licensed under the New BSD license; see the LICENSE file for details.
 
-MTOOLS_DIR=`python -c 'from distutils.sysconfig import get_python_lib; print get_python_lib()'`/MoodleTools
+PYTHON_LIB=`python -c 'from distutils.sysconfig import get_python_lib; print get_python_lib()'`
+MTOOLS_DIR=$PYTHON_LIB"/MoodleTools"
+
+# Check to see if we are just querying for the library path
+if [ "$1" = "lib" ]; then
+    echo $PYTHON_LIB
+    exit
+fi
 
 # Remove all .pyc files in the src and test directory
 find ./src -name *.pyc | xargs rm
@@ -28,6 +35,7 @@ if [ "$1" = "uninstall" ]; then
     sudo rm /usr/local/bin/mdl-server 2>/dev/null
     echo "   the moodle-tools scripts have been removed"
     sudo rm -Rf $MTOOLS_DIR 2>/dev/null
+    sudo rm -f $PYTHON_LIB/moodle_tools-*.egg-info
     echo "   the moodle-tools python library has been removed"
     echo
 fi
