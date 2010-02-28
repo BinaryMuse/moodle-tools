@@ -41,7 +41,7 @@ def chooseConfigFile(filename):
         return filename
 
     # If -f/--file was indeed used, and the file doesn't exist, don't fall
-    # through; instead, return None so error handling can take care of it.
+    # through; instead, return '' so error handling can take care of it.
     if not filename == '':
         return ''
 
