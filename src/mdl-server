@@ -4,43 +4,30 @@
 # Licensed under the New BSD license; see the LICENSE file for details.
 
 import sys
-from optparse import OptionParser
-from MoodleTools.MdlServer import MdlServer
-from MoodleTools.Exceptions import *
+from MoodleTools.mdl_server import *
 
-err = sys.stderr
+# If no data key is passed, we assume one.
+DEFAULT_DATA_KEY = 'src'
 
-# ==============================================================================
-# Parse options
-# ==============================================================================
-
-parser = OptionParser(usage="%prog [options] [<server> [<area> [<data>]]]",
-    description="Outputs configuration data. Specify a server, a server and an area, or a server, " +
-    "area, and data element (src or data) to print appropriate data.", version="Moodle Tools mdl-server 0.1")
-parser.add_option("-f", "--file", metavar="FILE", help="use FILE instead of MDL_SERVER_CONFIG or mdl-server.xml", default="")
-
-(options, args) = parser.parse_args()
-
-# ==============================================================================
-# Execute the program
-# ==============================================================================
-try:
-    mdl_svr = MdlServer(options, args)
-    mdl_svr.go()
-except IOError as (errorno, errorstr):
-    print >> err, "Could not find an XML definition. See the --help option for details on specifying a file."
-    quit(1)
-except TooManyArgsError:
-    print >> err, "Too many parameters passed."
-    quit(1)
-except ServerNotFoundError as e:
-    print >> err, "The server '{0}' was not found in the XML file.".format(e)
-    quit(1)
-except AreaNotFoundError as e:
-    print >> err, "The area '{0}' was not found in the XML file.".format(e)
-    quit(1)
-except InvalidDataKeyError as e:
-    print >> err, "The data key '{0}' was not found in the XML file.".format(e)
+options, args = parseOptions()
+filename = chooseConfigFile(options.file)
+# Exit with an error if no configuration file could be found.
+if filename == '' or filename == None:
+    print >> sys.stderr, "Could not find a configuration file.",
+    print >> sys.stderr, "See the --help option for details on",
+    print >> sys.stderr, "specifying a file."
     quit(1)
 
-quit(0)
+# Check our arguments length.
+if len(args) > 3:
+    print >> sys.stderr, "Too many arguments passed."
+    quit(1)
+
+# Do the magic.
+output = parseXml(filename, args)
+if output == None or output.strip() == '':
+    print >> sys.stderr, "Couldn't find what you were looking for."
+    quit(2)
+else:
+    print output
+    quit(0)
