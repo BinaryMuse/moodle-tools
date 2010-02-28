@@ -24,6 +24,7 @@ echo
 # Uninstall a distribution if we need to
 if [ "$1" = "uninstall" ]; then
     echo ">> uninstalling moodle-tools..."
+    sudo rm /usr/local/bin/mdl 2>/dev/null
     sudo rm /usr/local/bin/mdl-server 2>/dev/null
     echo "   the moodle-tools scripts have been removed"
     sudo rm -Rf $MTOOLS_DIR 2>/dev/null

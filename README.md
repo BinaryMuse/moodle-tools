@@ -14,23 +14,24 @@ Getting Help
 ------------
 
 Every program included in moodle-tools shows helpful output with the `-h` or
-`--help` option.
+`--help` option. Similar to Git, you can also get help on a command by running
+`mdl help COMMAND`.
 
 It Can Do
 ---------
 
-*   `mdl-server` - Shows server configuration data as defined in an XML-based
+*   `mdl server` - Shows server configuration data as defined in an XML-based
     configuration file. This XML file allows you to define an installation
     directory and a data directory for one or more installations of Moodle on
     one or more servers.
 
     Other programs that need to access information about your Moodle
-    installations will use the output from `mdl-server` to do so.
+    installations will use the output from `mdl server` to do so.
 
-    `mdl-server` tries to locate a valid XML file in the following order:
+    `mdl server` tries to locate a valid XML file in the following order:
 
-    1.  Look for the file passed by the command line (`mdl-server -f FILE` or
-    `mdl-server --file=FILE`)
+    1.  Look for the file passed by the command line (`mdl server -f FILE` or
+    `mdl server --file=FILE`)
     2.  Look for the file defined by the environment variable named
     `MDL_SERVER_CONFIG`
     3.  Look for a file named `mdl-server.xml` in the current working directory
@@ -46,23 +47,24 @@ It Can Do
 It Might Will Can Do
 --------------------
 
-*   `mdl-archive` - Archive a working git branch or a source distribution
+*   `mdl archive` - Archive a working git branch or a source distribution
     to a file
-*   `mdl-deploy` - Deploy a working git branch, source distribution, or
+*   `mdl deploy` - Deploy a working git branch, source distribution, or
     archive file to a working Moodle installation. Can use data from
-    `mdl-server` to determine installation locations
-*   `mdl-maintenance` - Turn maintenance mode on or off for a Moodle
+    `mdl server` to determine installation locations
+*   `mdl maintenance` - Turn maintenance mode on or off for a Moodle
     installation.
-*   `mdl-backup` - Back up certain parts of a Moodle installation, including
+*   `mdl backup` - Back up certain parts of a Moodle installation, including
     source code, data directory, and database schema and data.
-*   `mdl-roll-course` - Back up a current course and restore it into a new
+*   `mdl roll-course` - Back up a current course and restore it into a new
     course. (Might be easier to use RPC mechanisms?)
 
 Dependencies
 ------------
 
 moodle-tools is written in Python, so you will obviously need a working
-installation. I currently work with version 2.6.1.
+installation. Currently, any version after 2.4 will work. I personally currently
+use version 2.6.1.
 
 moodle-tools itself currently depends on no non-standard modules.
 
@@ -93,7 +95,7 @@ system. It does this in the following way:
     `distutils.sysconfig.get_python_lib()`.
 2.  Removing `MoodleTools` from the Python library path.
 3.  Removing `mdl-*` from `/usr/local/bin`. (Currently it only removes certain
-    programs--at this time, just `mdl-server`.)
+    programs--at this time, just `mdl` and `mdl-server`.)
 
 In either case, `clean.sh` runs checks to see if it can find any remnants of a
 moodle-tools installation on your system. It does the following:

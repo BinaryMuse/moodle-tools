@@ -1,0 +1,79 @@
+#!/usr/bin/env python
+
+# Copyright (c) 2010, Fresno Pacific University
+# Licensed under the New BSD license; see the LICENSE file for details.
+
+import sys, os, subprocess
+
+def print_usage(prog_name):
+    usage = '''usage: {0} [--version] [--exec-path[=MDL_TOOLS_EXEC_PATH]]
+       COMMAND [args]
+
+The following are valid commands:
+  server    show server path information
+
+See 'mdl help COMMAND' for more information on COMMAND.'''.format(prog_name)
+    print usage
+
+def find_exec_path(script_path):
+    '''
+    If the environment variable MDL_TOOLS_EXEC_PATH is set, we will use
+    that as our exec path instead of the path of the script. Otherwise,
+    we use the path of the script and wait for the user to override with
+    --exec-path=PATH
+    '''
+    try:
+        env_path = os.environ['MDL_TOOLS_EXEC_PATH']
+    except KeyError:
+        return script_path
+    else:
+        return os.path.abspath(os.path.expanduser(env_path))
+
+# mdl is a gateway to the other moodle-tools programs
+# check our arguments and send it along
+
+if len(sys.argv) == 1:
+    print_usage(sys.argv[0])
+    quit(0)
+
+# get the name of the program off the arg list
+RAW_EXEC_PATH = sys.argv.pop(0)
+# determine our exec path
+EXEC_PATH = RAW_EXEC_PATH
+EXEC_PATH = os.path.dirname(EXEC_PATH)
+EXEC_PATH = os.path.abspath(EXEC_PATH)
+EXEC_PATH = find_exec_path(EXEC_PATH)
+
+# iterate through the rest
+while len(sys.argv) > 0:
+    arg = sys.argv[0]
+    if arg == '-h' or arg == '--help':
+        print_usage(RAW_EXEC_PATH)
+        quit(0)
+        sys.argv.pop(0)
+
+    if arg.startswith('--exec-path'):
+        if len(arg) == 11:
+            print EXEC_PATH
+            quit(0)
+        elif len(arg) > 12 and arg[11] == '=':
+            EXEC_PATH = os.path.abspath(os.path.expanduser(arg[12:]))
+        sys.argv.pop(0)
+
+    # we've parsed all the options for mdl
+    # everything else should be a command and args
+    break
+
+# turn the remaining stuff into a command
+args = sys.argv
+# check to see if we got 'mdl help COMMAND'
+if args[0] == 'help':
+    args = [args[1], '--help']
+args[0] = EXEC_PATH + '/mdl-' + args[0]
+command_process = subprocess.Popen(args)
+command_process.communicate()[0]
+#output = subprocess.Popen(args, stdout=subprocess.PIPE).communicate()[0]
+#if not output == '': # if there is no stdout from the program, we don't
+#                     # want to print a newline
+#    print output.rstrip()
+quit(command_process.returncode)

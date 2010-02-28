@@ -13,6 +13,6 @@ setup(name='moodle-tools',
       url = 'http://binarymuse.github.com/moodle-tools',
       packages = ['MoodleTools'],
       package_dir = {'MoodleTools': 'src/MoodleTools'},
-      scripts = ['src/mdl-server'],
+      scripts = ['src/mdl', 'src/mdl-server'],
       license = 'New BSD License'
       )
