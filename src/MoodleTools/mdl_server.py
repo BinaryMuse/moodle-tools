@@ -12,7 +12,7 @@ def parseOptions():
     Parse out command line options.
     '''
     parser = OptionParser(
-        usage = "%prog [options] [<server> [<area> [<data>]]]",
+        usage = "%prog [options] [SERVER [AREA [DATA]]]",
         description = "Outputs configuration data. Specify a server, a " +
             "server and an area, or a server, area, and data element (src or "+
             " data) to print appropriate data."
