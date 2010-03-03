@@ -66,10 +66,16 @@ while len(sys.argv) > 0:
 
 # turn the remaining stuff into a command
 args = sys.argv
+if len(args) == 0:
+    print_usage(RAW_EXEC_PATH)
+    quit(0)
 # check to see if we got 'mdl help COMMAND'
-if args[0] == 'help':
+if len(args) >= 2 and args[0] == 'help':
     args = [args[1], '--help']
 args[0] = EXEC_PATH + '/mdl-' + args[0]
+if not os.path.isfile(args[0]):
+    print "Program not found on the execution path."
+    quit(1)
 command_process = subprocess.Popen(args)
 command_process.communicate()[0]
 #output = subprocess.Popen(args, stdout=subprocess.PIPE).communicate()[0]
