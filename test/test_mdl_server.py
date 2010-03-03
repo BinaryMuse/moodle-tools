@@ -3,122 +3,183 @@
 # Copyright (c) 2010, Fresno Pacific University
 # Licensed under the New BSD license; see the LICENSE file for details.
 
-import os
-import unittest
-import shutil
-from MoodleTools.mdl_server import *
+import os, sys, shutil, unittest
+from mock import Mock
+from optparse import Values
+from MoodleTools.mdl_server import mdl_server
+from BeQuiet import *
 
-class test_MdlServer_Driver(unittest.TestCase):
+class test_mdl_server(unittest.TestCase):
     def setUp(self):
-        self.filename = 'test/test_mdl-server.xml'
+        self.xml_file = 'test/test_mdl-server.xml'
+        self.envs = {}
+
+        self.command = mdl_server()
+        self.command.parseOptions = Mock()
+        self.command.parseOptions.side_effect = self.mock_parseOptions()
+
+    def mock_parseOptions(self):
+        self.command.options = Values()
+        self.command.options.file = self.xml_file
+        self.command.args = []
+
+    def save_env(self, var):
+        '''
+        Save the environment variable var in the has table;
+        save it as default if it does not exist.
+        '''
+        oldenviron = None
+        try:
+            oldenviron = os.environ['MDL_SERVER_CONFIG']
+        except KeyError:
+            pass
+        self.envs[var] = oldenviron
+
+    def restore_env(self, var):
+        '''
+        Restore the environment variable var from the hash table
+        unless it has the value unless.
+        '''
+        savedenv = None
+        try:
+            savedenv = self.envs[var]
+        except KeyError:
+            return
+        if not savedenv == None:
+            os.environ[var] = savedenv
 
     # ==========================================================================
-    # Testing mdl_server.chooseConfigFile()
+    # Testing mdl_server.main()
     # ==========================================================================
 
-    def testConfigFile_ValidFromCommandLine(self):
+    def test_too_many_args_return_code(self):
         '''
-        Good file passed on command line; should return that file name
+        Too many args on command line should result in a non-zero exit code
         '''
-        self.assertEqual(chooseConfigFile(self.filename), self.filename)
+        self.command.args = ['a', 'b', 'c', 'd']
+        with BeQuiet():
+            self.assertNotEqual(self.command.main(), 0)
 
-    def testConfigFile_InvalidFromCommandLine_GoodEnviron(self):
+    def test_bad_file_return_code(self):
         '''
-        Bad file passed on command line; good env; should return empty string
+        File-not-found error should result in a non-zero exit code
         '''
-        oldenviron = None
-        try:
-            oldenviron = os.environ['MDL_SERVER_CONFIG']
-        except KeyError:
-            pass
-        os.environ['MDL_SERVER_CONFIG'] = os.getcwd() + '/test/test_mdl-server.xml'
-        self.assertEqual(chooseConfigFile('fakefileisfake.fake'), '')
-        if(not oldenviron == None):
-            os.environ['MDL_SERVER_CONFIG'] = oldenviron
+        self.command.options.file = 'boogieboogie.asdf'
+        with BeQuiet():
+            self.assertNotEqual(self.command.main(), 0)
 
-    def testConfigFile_NoneFromCommandLine_GoodEnviron(self):
+    def test_bad_arguments_return_code(self):
         '''
-        No file passed on command line; good env; should return MDL_SERVER_CONFIG
+        A bad list of arguments should result in a non-zero exit code
         '''
-        oldenviron = None
-        try:
-            oldenviron = os.environ['MDL_SERVER_CONFIG']
-        except KeyError:
-            pass
-        os.environ['MDL_SERVER_CONFIG'] = os.getcwd() + '/test/test_mdl-server.xml'
-        self.assertEqual(chooseConfigFile(''), os.environ['MDL_SERVER_CONFIG'])
-        if(not oldenviron == None):
-            os.environ['MDL_SERVER_CONFIG'] = oldenviron
+        self.command.args = ['prod', 'fake', 'wheeee']
+        with BeQuiet():
+            self.assertNotEqual(self.command.main(), 0)
 
-    def testConfigFile_NoneFromCommandLine_NoEnviron(self):
+    # ==========================================================================
+    # Testing mdl_server.parseOptions()
+    # ==========================================================================
+
+    def test_argument_file_found(self):
         '''
-        No file passed on command line; no env; should return empty string
+        Passing a good file should result in that file being used
         '''
-        oldenviron = None
+        self.command.chooseConfigFile()
+        self.assertEqual(self.command.options.file, self.xml_file)
+
+    def test_argument_file_not_found(self):
+        '''
+        Passing a bad file should result in empty string even if env is set
+        '''
+        self.save_env('MDL_SERVER_CONFIG')
+        os.environ['MDL_SERVER_CONFIG'] = os.getcwd() + '/' + self.xml_file
+        self.command.options.file = 'fakefileisfake.bigphoney';
+        self.command.chooseConfigFile()
+        self.assertEqual(self.command.options.file, '')
+        self.restore_env('MDL_SERVER_CONFIG')
+
+    def test_argument_file_blank_use_env(self):
+        '''
+        Passing no file should result in using env if set
+        '''
+        self.save_env('MDL_SERVER_CONFIG')
+        filetouse = os.getcwd() + '/test/test_mdl-server.xml'
+        os.environ['MDL_SERVER_CONFIG'] = filetouse
+        self.command.options.file = ''
+        self.command.chooseConfigFile()
+        self.assertEqual(self.command.options.file, filetouse)
+        self.restore_env('MDL_SERVER_CONFIG')
+
+    def test_argument_file_blank_env_bad(self):
+        '''
+        Passing no file and having a bad env should result in empty string
+        '''
+        self.save_env('MDL_SERVER_CONFIG')
+        os.environ['MDL_SERVER_CONFIG'] = "fakefile.bigphoney"
+        self.command.options.file = ''
+        self.command.chooseConfigFile()
+        self.assertEqual(self.command.options.file, '')
+        self.restore_env('MDL_SERVER_CONFIG')
+
+    def test_argument_file_blank_no_env_use_cwd(self):
+        '''
+        Passing no file and having no env should use mdl-server.xml in cwd
+        '''
+        self.save_env('MDL_SERVER_CONFIG')
         try:
-            oldenviron = os.environ['MDL_SERVER_CONFIG']
-        except KeyError:
-            pass
-        else:
             del os.environ['MDL_SERVER_CONFIG']
-        self.assertEqual(chooseConfigFile(''), '')
-        if(not oldenviron == None):
-            os.environ['MDL_SERVER_CONFIG'] = oldenviron
-
-    def testConfigFile_NoneFromCommandLine_NoEnviron_UseCwd(self):
-        '''
-        Test that not specifying a file and not using env uses mdl-server.xml if found
-        '''
-        oldenviron = None
-        try:
-            oldenviron = os.environ['MDL_SERVER_CONFIG']
         except KeyError:
             pass
-        else:
-            del os.environ['MDL_SERVER_CONFIG']
         olddir = os.getcwd()
         os.chdir('test')
-        # Capture the output before asserting so that the file gets put
-        # back even if the test fails
+        # Assert last so all the file moves can be done even if the test fails
         shutil.move('test_mdl-server.xml', 'mdl-server.xml')
-        output = chooseConfigFile('')
+        self.command.options.file = ''
+        self.command.chooseConfigFile()
         shutil.move('mdl-server.xml', 'test_mdl-server.xml')
         os.chdir('..')
-        if(not oldenviron == None):
-            os.environ['MDL_SERVER_CONFIG'] = oldenviron
-        self.assertEqual(output, olddir + '/test/mdl-server.xml')
+        self.restore_env('MDL_SERVER_CONFIG')
+        self.assertEqual(self.command.options.file, olddir + '/test/mdl-server.xml')
 
     # ==========================================================================
     # Testing mdl_server.parseXml()
     # ==========================================================================
 
-    def testServerList(self):
+    def test_server_list(self):
         '''
         Test that the list of servers is correct
         '''
-        output = parseXml(self.filename, [])
-        self.assertEqual(output, "Test Moodle Server (test)\nProduction Moodle Server (prod)")
+        with BeQuiet():
+            self.command.main()
+        expected = "Test Moodle Server (test)\nProduction Moodle Server (prod)"
+        self.assertEqual(self.command.output, expected)
 
-    def testAreaList(self):
+    def test_area_list(self):
         '''
         Test that the list of areas is correct
         '''
-        output = parseXml(self.filename, ['prod'])
-        self.assertEqual(output, "live\nstage")
+        with BeQuiet():
+            self.command.args = ['prod']
+            self.command.main()
+        expected = "live\nstage"
+        self.assertEqual(self.command.output, expected)
 
-    def testData(self):
+    def test_data_list(self):
         '''
-        Test that the data is correct with no key argument
+        Test that the list of areas is correct
         '''
-        output = parseXml(self.filename, ['prod', 'live'])
-        self.assertEqual(output, "/Volumes/moodle3-e/moodle")
+        with BeQuiet():
+            self.command.args = ['prod', 'live']
+            self.command.main()
+        expected = "/Volumes/moodle3-e/moodle"
+        self.assertEqual(self.command.output, expected)
 
-    def testDataSpecified(self):
+    def test_data_list_specific(self):
         '''
-        Test that the data is correct with a key argument
+        Test that the list of areas is correct
         '''
-        output = parseXml(self.filename, ['test', 'stage', 'data'])
-        self.assertEqual(output, "/Volumes/moodle2-e/moodleuploads")
-
-if __name__ == '__main__':
-    unittest.main()
+        with BeQuiet():
+            self.command.args = ['test', 'stage', 'data']
+            self.command.main()
+        expected = "/Volumes/moodle2-e/moodleuploads"
+        self.assertEqual(self.command.output, expected)

@@ -4,30 +4,7 @@
 # Licensed under the New BSD license; see the LICENSE file for details.
 
 import sys
-from MoodleTools.mdl_server import *
+from MoodleTools.mdl_server import mdl_server
 
-# If no data key is passed, we assume one.
-DEFAULT_DATA_KEY = 'src'
-
-options, args = parseOptions()
-filename = chooseConfigFile(options.file)
-# Exit with an error if no configuration file could be found.
-if filename == '' or filename == None:
-    print >> sys.stderr, "Could not find a configuration file.",
-    print >> sys.stderr, "See the --help option for details on",
-    print >> sys.stderr, "specifying a file."
-    quit(1)
-
-# Check our arguments length.
-if len(args) > 3:
-    print >> sys.stderr, "Too many arguments passed."
-    quit(1)
-
-# Do the magic.
-output = parseXml(filename, args)
-if output == None or output.strip() == '':
-    print >> sys.stderr, "Couldn't find what you were looking for."
-    quit(2)
-else:
-    print output
-    quit(0)
+command = mdl_server()
+quit(command.main())
