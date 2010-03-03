@@ -7,8 +7,9 @@ import os, sys
 from os.path import abspath, expanduser
 from optparse import OptionParser
 from MoodleTools.ServerConfigParser import *
+from MoodleTools.mdl_app import *
 
-class mdl_server:
+class mdl_server(mdl_app):
     '''
     Application class for mdl-server
     '''

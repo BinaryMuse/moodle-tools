@@ -25,9 +25,18 @@ def find_exec_path(script_path):
     try:
         env_path = os.environ['MDL_TOOLS_EXEC_PATH']
     except KeyError:
+        os.environ['MDL_TOOLS_EXEC_PATH'] = script_path
         return script_path
     else:
-        return os.path.abspath(os.path.expanduser(env_path))
+        os.environ['MDL_TOOLS_EXEC_PATH'] = \
+            os.path.abspath(os.path.expanduser(env_path))
+        return os.environ['MDL_TOOLS_EXEC_PATH']
+
+def set_global_exec_path(abs_path):
+    '''
+    The user passed an option to override the exec path.
+    '''
+    os.environ['MDL_TOOLS_EXEC_PATH'] = abs_path
 
 # mdl is a gateway to the other moodle-tools programs
 # check our arguments and send it along
@@ -58,6 +67,7 @@ while len(sys.argv) > 0:
             quit(0)
         elif len(arg) > 12 and arg[11] == '=':
             EXEC_PATH = os.path.abspath(os.path.expanduser(arg[12:]))
+            set_global_exec_path(EXEC_PATH)
         sys.argv.pop(0)
 
     # we've parsed all the options for mdl
