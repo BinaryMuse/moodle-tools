@@ -1,3 +1,8 @@
+NOTICE
+======
+
+moodle-tools is no longer under active development. Deployment strategies are easier than ever with Git; I may, however, go back sometime and look at backup/restore functionality via the command line.
+
 moodle-tools
 ============
 
